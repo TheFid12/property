@@ -1,20 +1,23 @@
-from src.power import power_function
-from src.constants import SAMPLE_CONSTANT
+from src.source import (
+    FileTaskSource,
+    GeneratorTaskSource,
+    APITaskSource,
+    collect_all_tasks,
+)
 
 
 def main() -> None:
-    """
-    Обязательнная составляющая программ, которые сдаются. Является точкой входа в приложение
-    :return: Данная функция ничего не возвращает
-    """
+    sources = [
+        FileTaskSource("tasks.json"),
+        GeneratorTaskSource(count=3, prefix="task"),
+        APITaskSource([{"id": "api_task_1", "payload": "from api"}])
+    ]
 
-    target, degree = map(int, input("Введите два числа разделенные пробелом: ").split(" "))
+    tasks = collect_all_tasks(sources)
 
-    result = power_function(target=target, power=degree)
+    for task in tasks:
+        print(f"[{task.id}] {task.payload}")
 
-    print(result)
-
-    print(SAMPLE_CONSTANT)
 
 if __name__ == "__main__":
     main()
